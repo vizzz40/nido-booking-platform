@@ -2,6 +2,7 @@ package dev.vish.nido.booking;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -25,4 +26,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @EntityGraph(attributePaths = {"listing", "guest"})
     List<Booking> findByListingHostIdOrderByCreatedAtDesc(Long hostId);
+
+    @EntityGraph(attributePaths = {"listing", "listing.host", "guest"})
+    @Query("select b from Booking b where b.id = :id")
+    Optional<Booking> findDetailedById(@Param("id") Long id);
 }
