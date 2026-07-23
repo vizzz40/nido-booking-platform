@@ -25,7 +25,7 @@ server:
 
 nido:
   security:
-    jwt-secret: ${JWT_SECRET:bmlkby1kZXZlbG9wbWVudC1zZWNyZXQta2V5LTIwMjYtY2hhbmdlLW1l}
+    jwt-secret: ${JWT_SECRET:nido-development-secret-key-change-me-now}
     token-minutes: ${JWT_TOKEN_MINUTES:120}
   demo-data: ${NIDO_DEMO_DATA:true}
 

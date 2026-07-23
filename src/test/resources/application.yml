@@ -12,6 +12,6 @@ spring:
 
 nido:
   security:
-    jwt-secret: bmlkby10ZXN0LXNlY3JldC1rZXktZm9yLWp3dC1zaWduaW5nLTIwMjY=
+    jwt-secret: nido-test-secret-key-for-jwt-signing-2026
     token-minutes: 30
   demo-data: false

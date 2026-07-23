@@ -3,7 +3,7 @@ package dev.vish.nido.security;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import java.util.Base64;
+import java.nio.charset.StandardCharsets;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +22,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
@@ -38,7 +39,7 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index.html", "/css/**", "/js/**", "/favicon.svg",
+                        .requestMatchers("/", "/index.html", "/css/**", "/js/**", "/images/**", "/favicon.svg",
                                 "/api/auth/**", "/actuator/health")
                         .permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/listings/**")
@@ -65,14 +66,15 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecretKey jwtSecretKey(@Value("${nido.security.jwt-secret}") String encodedSecret) {
-        byte[] decoded = Base64.getDecoder().decode(encodedSecret);
-        return new SecretKeySpec(decoded, "HmacSHA256");
+    SecretKey jwtSecretKey(@Value("${nido.security.jwt-secret}") String secret) {
+        return new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
     }
 
     @Bean
     JwtDecoder jwtDecoder(SecretKey secretKey) {
-        return NimbusJwtDecoder.withSecretKey(secretKey).build();
+        return NimbusJwtDecoder.withSecretKey(secretKey)
+                .macAlgorithm(MacAlgorithm.HS256)
+                .build();
     }
 
     @Bean

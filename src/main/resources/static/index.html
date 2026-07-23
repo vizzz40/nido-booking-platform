@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Nido helps travellers discover and book memorable stays across Italy.">
+    <title>Nido | Stay somewhere worth remembering</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="/js/app.js" defer></script>
+</head>
+<body>
+<header class="site-header">
+    <a class="brand" href="/" aria-label="Nido home">
+        <span class="brand-mark">N</span>
+        <span>Nido</span>
+    </a>
+    <nav class="nav-actions" aria-label="Main navigation">
+        <button class="nav-link" id="tripsButton" type="button" hidden>My trips</button>
+        <button class="nav-link" id="hostButton" type="button" hidden>Host dashboard</button>
+        <button class="nav-link" id="loginButton" type="button">Log in</button>
+        <button class="button button-dark button-small" id="registerButton" type="button">Join Nido</button>
+        <button class="avatar-button" id="accountButton" type="button" hidden aria-label="Account"></button>
+    </nav>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="hero-glow hero-glow-one"></div>
+        <div class="hero-glow hero-glow-two"></div>
+        <div class="hero-content">
+            <p class="eyebrow">Thoughtful stays across Italy</p>
+            <h1>Stay somewhere<br>worth remembering.</h1>
+            <p class="hero-copy">Independent homes, honest details and a booking experience that keeps things simple.</p>
+            <form class="search-bar" id="searchForm">
+                <label>
+                    <span>Where</span>
+                    <input type="search" name="location" placeholder="City or country">
+                </label>
+                <label>
+                    <span>Check in</span>
+                    <input type="date" name="checkIn">
+                </label>
+                <label>
+                    <span>Check out</span>
+                    <input type="date" name="checkOut">
+                </label>
+                <label>
+                    <span>Guests</span>
+                    <input type="number" name="guests" min="1" max="30" value="2">
+                </label>
+                <button class="search-button" type="submit" aria-label="Search stays">Search</button>
+            </form>
+        </div>
+        <aside class="hero-note">
+            <span class="hero-note-number">01</span>
+            <p>From a canal-side studio to a quiet home in the hills.</p>
+        </aside>
+    </section>
+
+    <section class="stays-section" id="stays">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">Curated for slower travel</p>
+                <h2>Find your next nido</h2>
+            </div>
+            <p id="resultCount" aria-live="polite"></p>
+        </div>
+        <div class="filter-row" aria-label="Quick destinations">
+            <button class="filter-chip active" data-location="" type="button">All stays</button>
+            <button class="filter-chip" data-location="Venice" type="button">Venice</button>
+            <button class="filter-chip" data-location="Florence" type="button">Florence</button>
+            <button class="filter-chip" data-location="Milan" type="button">Milan</button>
+            <button class="filter-chip" data-location="Rome" type="button">Rome</button>
+            <button class="filter-chip" data-location="Como" type="button">Como</button>
+        </div>
+        <div class="listing-grid" id="listingGrid">
+            <div class="loading-card"></div>
+            <div class="loading-card"></div>
+            <div class="loading-card"></div>
+        </div>
+        <div class="empty-state" id="emptyState" hidden>
+            <span>Nothing here yet</span>
+            <h3>Try another place or set of dates.</h3>
+            <button class="button button-dark" id="clearSearchButton" type="button">Clear search</button>
+        </div>
+    </section>
+
+    <section class="principles">
+        <div>
+            <p class="eyebrow">Made for confident booking</p>
+            <h2>Less noise.<br>Better stays.</h2>
+        </div>
+        <div class="principle-list">
+            <article>
+                <span>01</span>
+                <div>
+                    <h3>Useful details</h3>
+                    <p>Clear capacities, amenities and pricing before you book.</p>
+                </div>
+            </article>
+            <article>
+                <span>02</span>
+                <div>
+                    <h3>Live availability</h3>
+                    <p>Date searches exclude conflicting reservations immediately.</p>
+                </div>
+            </article>
+            <article>
+                <span>03</span>
+                <div>
+                    <h3>Verified reviews</h3>
+                    <p>Only guests with completed stays can share a review.</p>
+                </div>
+            </article>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <a class="brand footer-brand" href="/">
+        <span class="brand-mark">N</span>
+        <span>Nido</span>
+    </a>
+    <p>Thoughtful stays, built in Padua.</p>
+</footer>
+
+<dialog class="dialog detail-dialog" id="listingDialog">
+    <button class="dialog-close" data-close="listingDialog" type="button" aria-label="Close">×</button>
+    <div class="detail-layout">
+        <div class="detail-main">
+            <img id="detailImage" src="" alt="">
+            <div class="detail-title-row">
+                <div>
+                    <p class="eyebrow" id="detailLocation"></p>
+                    <h2 id="detailTitle"></h2>
+                </div>
+                <div class="rating-large" id="detailRating"></div>
+            </div>
+            <p class="detail-meta" id="detailMeta"></p>
+            <p class="detail-description" id="detailDescription"></p>
+            <div class="amenities" id="detailAmenities"></div>
+            <div class="reviews">
+                <h3>Guest notes</h3>
+                <div id="reviewList"></div>
+            </div>
+        </div>
+        <aside class="booking-panel">
+            <div class="booking-price"><strong id="detailPrice"></strong><span> / night</span></div>
+            <form id="bookingForm">
+                <input type="hidden" name="listingId">
+                <label>
+                    <span>Check in</span>
+                    <input type="date" name="checkIn" required>
+                </label>
+                <label>
+                    <span>Check out</span>
+                    <input type="date" name="checkOut" required>
+                </label>
+                <label>
+                    <span>Guests</span>
+                    <input type="number" name="guests" min="1" value="2" required>
+                </label>
+                <button class="button button-accent button-full" type="submit">Reserve</button>
+            </form>
+            <p class="booking-note">You will see the exact total after booking.</p>
+        </aside>
+    </div>
+</dialog>
+
+<dialog class="dialog auth-dialog" id="authDialog">
+    <button class="dialog-close" data-close="authDialog" type="button" aria-label="Close">×</button>
+    <div class="auth-heading">
+        <span class="brand-mark">N</span>
+        <p class="eyebrow" id="authEyebrow">Welcome back</p>
+        <h2 id="authTitle">Log in to Nido</h2>
+    </div>
+    <form id="authForm">
+        <label class="register-only">
+            <span>Name</span>
+            <input type="text" name="name" maxlength="100" autocomplete="name">
+        </label>
+        <label>
+            <span>Email</span>
+            <input type="email" name="email" required autocomplete="email">
+        </label>
+        <label>
+            <span>Password</span>
+            <input type="password" name="password" minlength="8" required autocomplete="current-password">
+        </label>
+        <label class="register-only">
+            <span>Account type</span>
+            <select name="role">
+                <option value="GUEST">Traveller</option>
+                <option value="HOST">Host</option>
+            </select>
+        </label>
+        <button class="button button-accent button-full" id="authSubmit" type="submit">Log in</button>
+    </form>
+    <div class="demo-access login-only">
+        <p>Explore with a demo account</p>
+        <div>
+            <button type="button" data-demo="guest">Traveller</button>
+            <button type="button" data-demo="host">Host</button>
+        </div>
+    </div>
+    <button class="auth-switch" id="authSwitch" type="button">New here? Create an account</button>
+</dialog>
+
+<dialog class="dialog dashboard-dialog" id="tripsDialog">
+    <button class="dialog-close" data-close="tripsDialog" type="button" aria-label="Close">×</button>
+    <p class="eyebrow">Your travel plans</p>
+    <h2>My trips</h2>
+    <div class="dashboard-list" id="tripList"></div>
+</dialog>
+
+<dialog class="dialog dashboard-dialog host-dialog" id="hostDialog">
+    <button class="dialog-close" data-close="hostDialog" type="button" aria-label="Close">×</button>
+    <p class="eyebrow">Host workspace</p>
+    <h2>Your places</h2>
+    <div class="host-layout">
+        <div class="dashboard-list" id="hostListingList"></div>
+        <form class="host-form" id="hostListingForm">
+            <h3>Add a listing</h3>
+            <div class="form-grid">
+                <label><span>Title</span><input name="title" required maxlength="120"></label>
+                <label><span>City</span><input name="city" required maxlength="100"></label>
+                <label><span>Country</span><input name="country" required maxlength="100" value="Italy"></label>
+                <label><span>Type</span>
+                    <select name="propertyType">
+                        <option>APARTMENT</option>
+                        <option>HOUSE</option>
+                        <option>VILLA</option>
+                        <option>CABIN</option>
+                        <option>LOFT</option>
+                    </select>
+                </label>
+                <label><span>Guests</span><input name="maxGuests" type="number" min="1" value="2" required></label>
+                <label><span>Bedrooms</span><input name="bedrooms" type="number" min="1" value="1" required></label>
+                <label><span>Beds</span><input name="beds" type="number" min="1" value="1" required></label>
+                <label><span>Bathrooms</span><input name="bathrooms" type="number" min=".5" step=".5" value="1" required></label>
+                <label><span>Nightly price</span><input name="nightlyPrice" type="number" min="1" step=".01" required></label>
+                <label><span>Image path</span><input name="imageUrl" value="/images/rome.svg" required></label>
+            </div>
+            <label><span>Description</span><textarea name="description" required maxlength="2000"></textarea></label>
+            <label><span>Amenities, separated by commas</span><input name="amenities" value="Wi-Fi, Kitchen"></label>
+            <button class="button button-dark" type="submit">Publish listing</button>
+        </form>
+    </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+services:
+  database:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: nido
+      POSTGRES_USER: nido
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-nido}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nido -d nido"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - nido-data:/var/lib/postgresql/data
+
+  application:
+    build:
+      context: .
+    environment:
+      DATABASE_URL: jdbc:postgresql://database:5432/nido
+      DATABASE_USERNAME: nido
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-nido}
+      JWT_SECRET: ${JWT_SECRET:-nido-development-secret-key-change-me-now}
+      NIDO_DEMO_DATA: ${NIDO_DEMO_DATA:-true}
+    depends_on:
+      database:
+        condition: service_healthy
+    ports:
+      - "${PORT:-8080}:8080"
+    restart: unless-stopped
+
+volumes:
+  nido-data:
