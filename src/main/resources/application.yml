@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: nido
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/nido}
+    username: ${DATABASE_USERNAME:nido}
+    password: ${DATABASE_PASSWORD:nido}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+  jackson:
+    default-property-inclusion: non_null
+
+server:
+  port: ${PORT:8080}
+  error:
+    include-message: never
+
+nido:
+  security:
+    jwt-secret: ${JWT_SECRET:bmlkby1kZXZlbG9wbWVudC1zZWNyZXQta2V5LTIwMjYtY2hhbmdlLW1l}
+    token-minutes: ${JWT_TOKEN_MINUTES:120}
+  demo-data: ${NIDO_DEMO_DATA:true}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
